@@ -1,6 +1,7 @@
 #include <Python.h>
+#include <math.h>
 
-static PyObject *py_find_prob(PyObject *self, PyObject *args) {
+static PyObject *py_probability(PyObject *self, PyObject *args) {
     double x, y, result;
 
     if (!PyArg_ParseTuple(args,"dd", &x, &y)) {
@@ -10,24 +11,77 @@ static PyObject *py_find_prob(PyObject *self, PyObject *args) {
     return Py_BuildValue("d", result);
 }
 
-static PyObject *py_find_expectation(PyObject *self, PyObject *args) {
-    double x, y, result; ??????
+static PyObject *py_expectation(PyObject *self, PyObject *args) {
+    PyObject *pylist1, *pylist2;
+    double  double_item1, double_item2, len1, len2;
+    double result = 0;
+    int i;
 
-    if (!PyArg_ParseTuple(args,"dd", &x, &y)) {
+    if (!PyArg_ParseTuple(args,"OO",&pylist1, &pylist2)) {
         return NULL;
     }
-    result = x/y;
+    len1 = PySequence_Fast_GET_SIZE(pylist1);
+    len2 = PySequence_Fast_GET_SIZE(pylist2);
+    if (len1 != len2)
+        return NULL;
+
+    for(i=0; i<len1; i++) {
+        PyObject *item1 = PySequence_Fast_GET_ITEM(pylist1,i);
+        PyObject *item2 = PySequence_Fast_GET_ITEM(pylist2,i);
+        double_item1 = PyFloat_AsDouble(item1);
+        double_item2 = PyFloat_AsDouble(item2);
+        result += double_item1 * double_item2;
+    }
+
     return Py_BuildValue("d", result);
+}
+
+static PyObject *py_dispersion(PyObject *self, PyObject *args) {
+    PyObject *pylist1, *pylist2;
+    double double_item1, double_item2, len1, len2;
+    double result1 = 0, result2 = 0;
+    int i;
+
+    if (!PyArg_ParseTuple(args, "OO", &pylist1, &pylist2)) {
+        return NULL;
+    }
+    len1 = PySequence_Fast_GET_SIZE(pylist1);
+    len2 = PySequence_Fast_GET_SIZE(pylist2);
+    if (len1 != len2)
+        return NULL;
+
+    for (i = 0; i < len1; i++) {
+        PyObject *item1 = PySequence_Fast_GET_ITEM(pylist1, i);
+        PyObject *item2 = PySequence_Fast_GET_ITEM(pylist2, i);
+        double_item1 = PyFloat_AsDouble(item1);
+        double_item2 = PyFloat_AsDouble(item2);
+        result1 += double_item1 * double_item2;
+        result2 += pow(double_item1,2) * double_item2;
+    }
+
+    return Py_BuildValue("d", result2 - pow(result1,2));
 }
 
 
 
 static PyMethodDef ownmod_methods[] = {
         {
-                "find_prob", // название функции внутри python
-                py_find_prob, // функция C
+                "probability", // название функции внутри python
+                py_probability, // функция C
                       METH_VARARGS, // макрос, поясняющий, что функция у нас с аргументами
                          "calculate probability" // документация для функции внутри python
+        },
+        {
+                "expectation", // название функции внутри python
+                py_expectation, // функция C
+                    METH_VARARGS, // макрос, поясняющий, что функция у нас с аргументами
+                "calculate expectation" // документация для функции внутри python
+        },
+        {
+                "dispersion", // название функции внутри python
+                py_dispersion, // функция C
+                METH_VARARGS, // макрос, поясняющий, что функция у нас с аргументами
+                "calculate dispersion" // документация для функции внутри python
         },
         { NULL, NULL, 0, NULL } // так называемый sentiel. Сколько бы элементов структуры у вас не было, этот нулевой элемент должен быть всегда, и при этом быть последним
 };
