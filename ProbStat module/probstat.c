@@ -11,6 +11,17 @@ static PyObject *py_probability(PyObject *self, PyObject *args) {
     return Py_BuildValue("d", result);
 }
 
+static PyObject *py_geometry_prob(PyObject *self, PyObject *args) {
+    double x, y, result;
+
+    if(!PyArg_ParseTuple(args, "dd", &x, &y)){
+        return NULL;
+    }
+    result = x/y;
+    return Py_BuildValue("d", result);
+}
+
+
 static PyObject *py_expectation(PyObject *self, PyObject *args) {
     PyObject *pylist1, *pylist2;
     double  double_item1, double_item2, len1, len2;
@@ -70,6 +81,12 @@ static PyMethodDef ownmod_methods[] = {
                 py_probability, // функция C
                       METH_VARARGS, // макрос, поясняющий, что функция у нас с аргументами
                          "calculate probability" // документация для функции внутри python
+        },
+        {
+                "geometry_prob", // название функции внутри python
+                py_geometry_prob, // функция C
+                METH_VARARGS, // макрос, поясняющий, что функция у нас с аргументами
+                "calculate geometry probability" // документация для функции внутри python
         },
         {
                 "expectation", // название функции внутри python
