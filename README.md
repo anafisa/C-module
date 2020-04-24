@@ -1,4 +1,5 @@
-![](https://i.imgur.com/9V5Ie0z.png)
+![](https://i.imgur.com/I97AaMV.png)
+
 
 
 
@@ -12,7 +13,9 @@ Here are just a few of the things that ProbStat does well:
 * calculate [mathematical expectation](https://en.wikipedia.org/wiki/Expected_value)
 * calculate [dispersion](https://en.wikipedia.org/wiki/Dispersion)
 
+
 ## 3. Where to get it?
-The source code is currently hosted on GitHub [here](https://github.com/anafisa/C-modules/tree/master/ProbStat%20module)
+The source code is currently hosted on GitHub [here](https://i.imgur.com/ySQck1T.png)
+
 
 ## 4. How to use it?
