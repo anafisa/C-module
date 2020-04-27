@@ -31,7 +31,6 @@ static PyObject *py_probability(PyObject *self, PyObject *args) {
         return NULL;
     }
     result = x/y;
-
     return Py_BuildValue("d", result);
 }
 
@@ -43,7 +42,6 @@ static PyObject *py_geometric_prob(PyObject *self, PyObject *args) {
         return NULL;
     }
     result = x/y;
-
     return Py_BuildValue("d", result);
 }
 
@@ -55,9 +53,9 @@ static PyObject *py_conditional_prob(PyObject *self, PyObject *args) {
         return NULL;
     }
     result = x/y;
-
     return Py_BuildValue("d", result);
 }
+
 
 /* law of total probability */
 static PyObject *py_total_prob(PyObject *self, PyObject *args) {
@@ -82,6 +80,16 @@ static PyObject *py_total_prob(PyObject *self, PyObject *args) {
         result += k * p;
     }
     return Py_BuildValue("d", result);
+}
+
+/* independent events */
+static PyObject *py_independent_events(PyObject *self, PyObject *args) {
+    double x, y, z;
+
+    if(!PyArg_ParseTuple(args, "ddd", &x, &y, &z)){
+        return NULL;
+    }
+    return Py_BuildValue("d", x * y == z);
 }
 
 /* bayes rule */
@@ -279,7 +287,7 @@ static PyMethodDef ownmod_methods[] = {
                 "probability",  // python name
                 py_probability, // C name
                 METH_VARARGS,
-                "Takes 2 arguments a, b and calculate probability"
+                "Takes 2 arguments: A - number of correct events , B - total number of events. Returns P(A)."
         },
 
         /* geometric probability */
@@ -287,7 +295,7 @@ static PyMethodDef ownmod_methods[] = {
                 "geometric_prob",
                 py_geometric_prob,
                 METH_VARARGS,
-                "Takes 2 arguments a, b, where a is a satisfying area and b is the whole area. Returns the geometric probability"
+                "Takes 2 arguments: A - satisfying area, B - whole area. Returns P(A)."
         },
 
         /* conditional probability */
@@ -295,23 +303,31 @@ static PyMethodDef ownmod_methods[] = {
                 "conditional_prob",
                 py_conditional_prob,
                 METH_VARARGS,
-                "Takes 2 arguments P(a, b) and P(b). Returns the probability event A, provided that event b occured."
+                "Takes 2 arguments: P(AB) and P(b). Returns P(A|B)."
         },
 
-        /* complete probability */
+        /* total probability */
         {
                 "total_prob",
                 py_total_prob,
                 METH_VARARGS,
-                "Takes 2 arguments, lists: { P(Hi) } and { P(A|Hi) }. Returns the complete probability."
+                "Takes 2 arguments: { P(Hi) }, { P(A|Hi) }. Returns P(A)."
         },
 
-        /* bayes rule */
+        /* independent events */
+        {
+                "independent_events",
+                py_independent_events,
+                METH_VARARGS,
+                "Takes 3 arguments: P(A), P(B), P(AB). Returns whether events A and B are independent (0) or not (1)."
+        },
+
+        /* bayes theorem */
         {
                 "bayes_rule",
                 py_bayes_rule,
                 METH_VARARGS,
-                "Takes 3 arguments, lists: { P(Hi) } and { P(A|Hi) } and i. Returns the probability P(Hi|A)."
+                "Takes 3 arguments: [ P(Hi) ], [ P(A|Hi) ], i. Returns P(Hi|A)."
         },
 
         /* simple bernoulli scheme */
@@ -319,7 +335,7 @@ static PyMethodDef ownmod_methods[] = {
                 "bernoulli_simple",
                 py_bernoulli_simple,
                 METH_VARARGS,
-                "Takes 3 arguments p, n, k. Returns the probability of an event with the probability p in a single test to occur k times in a series of n tests."
+                "Takes 3 arguments: p, n, k. Returns the probability of an event with the probability p in a single test to occur k times in a series of n tests."
         },
 
         /* interval bernoulli scheme */
@@ -327,7 +343,7 @@ static PyMethodDef ownmod_methods[] = {
                 "bernoulli_interval",
                 py_bernoulli_interval,
                 METH_VARARGS,
-                "Takes 4 arguments p, n, k1, k2. Returns the probability of an event with the probability p in a single test to occur from k1 to k2 times in a series of n tests."
+                "Takes 4 arguments: p, n, k1, k2. Returns the probability of an event with the probability p in a single test to occur from k1 to k2 times in a series of n tests."
         },
 
         /*  multiple bernoulli scheme*/
@@ -335,7 +351,7 @@ static PyMethodDef ownmod_methods[] = {
                 "bernoulli_multiple",
                 py_bernoulli_multiple,
                 METH_VARARGS,
-                "Takes 2 lists as [k1, k2, ... ], [p1, p2, ... ]. Returns the probability to 1-st event with probability p1 to occur k1 times and 2-nd event with probability p2 to occur k2 times and so on in k1 + k2 + ... = n times."
+                "Takes 2 arguments: [k1, k2, ... ], [p1, p2, ... ]. Returns the probability to 1-st event with probability p1 to occur k1 times and 2-nd event with probability p2 to occur k2 times and so on in k1 + k2 + ... = n times."
         },
 
         /* De Moivre–Laplace local theorem */
@@ -343,7 +359,7 @@ static PyMethodDef ownmod_methods[] = {
                 "local_moivre_laplace",
                 py_local_moivre_laplace,
                 METH_VARARGS,
-                "Takes 3 arguments p, n, k. Returns the probability of an event with the probability p in a single test to occur k times in a series of n tests. The probability is calculated by the local theorem of de Moivre-Laplace."
+                "Takes 3 arguments: p, n, k. Returns the probability of an event with the probability p in a single test to occur k times in a series of n tests. The probability is calculated by the local theorem of de Moivre-Laplace."
         },
 
         /* expected value */
@@ -351,7 +367,7 @@ static PyMethodDef ownmod_methods[] = {
                 "expected_value",
                 py_expected_value,
                     METH_VARARGS,
-                "calculate expected value"
+                "Takes 2 arguments: [x1, x2, ...], [p1, p2,...]. Returns E(x)."
         },
 
         /* variance */
@@ -359,7 +375,7 @@ static PyMethodDef ownmod_methods[] = {
                 "variance",
                 py_variance,
                 METH_VARARGS,
-                "calculate dispersion"
+                "Takes 2 arguments: [x1, x2, ...], [p1, p2,...]. Returns D(x)."
         },
 
         /* standard deviation */
@@ -367,17 +383,16 @@ static PyMethodDef ownmod_methods[] = {
                 "standard_deviation",
                 py_standard_deviation,
                 METH_VARARGS,
-                "calculate standard deviation"
+                "Takes 2 arguments: [x1, x2, ...], [p1, p2,...]. Returns standard deviation."
         },
         { NULL, NULL, 0, NULL }
 };
 
 
 static PyModuleDef simple_module = {
-        /* Описываем наш модуль */
-        PyModuleDef_HEAD_INIT, // обязательный макрос
+        PyModuleDef_HEAD_INIT,
         "probstat", // probstat.__name__
-        "amazing documentation", // my_plus.__doc__
+        "probstat - the main helper for students in probability & statistics.\nprobstat methods allow users to deal with complicated tasks and calculations in statistics and probability theory.", // probstat.__doc__
         -1,
         ownmod_methods
 };
