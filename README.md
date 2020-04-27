@@ -65,17 +65,6 @@ probstat.standard_deviation([0, 1, 2, 4], [0.2, 0.3, 0.4, 0.1])
 
 
 
-# 4. How to use it?
-```python=
-import probstat
-```
-# 5. Authors
-Anfisa Lepekhina | anfisa_lepekhina5@mail.ru
-Maxim Skibin |  skibin-mvp@mail.ru
-
-![](https://i.imgur.com/Zs3kSNj.png)
-
-
 
 
 
