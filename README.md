@@ -46,6 +46,9 @@ import probstat
 probstat.probability(1,5)
 >> 0.2
 
+probstat.bernoulli_simple(0.7, 17, 11)
+>>0.18
+
 probstat.expected_value([0, 1, 2, 4], [0.2, 0.3, 0.4, 0.1])
 >> 1.5
 
@@ -61,6 +64,10 @@ probstat.standard_deviation([0, 1, 2, 4], [0.2, 0.3, 0.4, 0.1])
 * Maxim Skibin |  skibin-mvp@mail.ru
 
 ![](https://i.imgur.com/Zs3kSNj.png)
+
+
+
+
 
 
 
