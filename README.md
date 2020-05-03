@@ -44,19 +44,19 @@ The source code is currently hosted on GitHub, click [here](https://github.com/a
 import probstat
 
 probstat.probability(1,5)
->> 0.2
+>>> 0.2
 
 probstat.bernoulli_simple(0.7, 17, 11)
->>0.18
+>>> 0.18
 
 probstat.expected_value([0, 1, 2, 4], [0.2, 0.3, 0.4, 0.1])
->> 1.5
+>>> 1.5
 
 probstat.variance([0, 1, 2, 4], [0.2, 0.3, 0.4, 0.1])
->> 1.25
+>>> 1.25
 
 probstat.standard_deviation([0, 1, 2, 4], [0.2, 0.3, 0.4, 0.1])
->> 1.12
+>>> 1.12
 ```
 
 # 5. Authors
