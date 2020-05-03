@@ -30,7 +30,7 @@ static PyObject *py_probability(PyObject *self, PyObject *args) {
     if (!PyArg_ParseTuple(args,"dd", &x, &y)) {
         return NULL;
     }
-    result = x/y;
+    result = round(100*x/y)/100;
     return Py_BuildValue("d", result);
 }
 
@@ -41,7 +41,7 @@ static PyObject *py_geometric_prob(PyObject *self, PyObject *args) {
     if(!PyArg_ParseTuple(args, "dd", &x, &y)){
         return NULL;
     }
-    result = x/y;
+    result = round(100*x/y)/100;
     return Py_BuildValue("d", result);
 }
 
@@ -52,7 +52,7 @@ static PyObject *py_conditional_prob(PyObject *self, PyObject *args) {
     if(!PyArg_ParseTuple(args, "dd", &x, &y)){
         return NULL;
     }
-    result = x/y;
+    result = round(100*x/y)/100;
     return Py_BuildValue("d", result);
 }
 
@@ -79,7 +79,7 @@ static PyObject *py_total_prob(PyObject *self, PyObject *args) {
         p = PyFloat_AsDouble(hipo);
         result += k * p;
     }
-    return Py_BuildValue("d", result);
+    return Py_BuildValue("d", round(100*result)/100);
 }
 
 /* independent events */
@@ -120,7 +120,7 @@ static PyObject *py_bayes_rule(PyObject *self, PyObject *args) {
     p = PyFloat_AsDouble(hipo);
     result = (p * k) / complete_prob;
 
-    return Py_BuildValue("d", result);
+    return Py_BuildValue("d", round(100*result)/100);
 }
 
 /* simple bernoulli scheme */
@@ -133,7 +133,7 @@ static PyObject *py_bernoulli_simple(PyObject *self, PyObject *args) {
     }
     result = binomial(n, k) * pow(p, k) * pow(1-p, n-k);
 
-    return Py_BuildValue("d", result);
+    return Py_BuildValue("d", round(100*result)/100);
 }
 
 /* interval bernoulli scheme  */
@@ -147,7 +147,7 @@ static PyObject *py_bernoulli_interval(PyObject *self, PyObject *args) {
     for(k1; k1 < k2+1; k1++){
         result += binomial(n, k1) * pow(p, k1) * pow(1-p, n-k1);
     }
-    return Py_BuildValue("d", result);
+    return Py_BuildValue("d", round(100*result)/100);
 }
 
 /* multiple tests bernoulli scheme */
@@ -181,7 +181,7 @@ static PyObject *py_bernoulli_multiple(PyObject *self, PyObject *args) {
         result *= binomial(n, k) * pow(p, k);
         n -= k;
     }
-    return Py_BuildValue("d", result);
+    return Py_BuildValue("d", round(100*result)/100);
 }
 
 /* De Moivre–Laplace local theorem */
@@ -197,7 +197,7 @@ static PyObject *py_local_moivre_laplace(PyObject *self, PyObject *args) {
     x = (k - n*p) / sqrt(n*p*q);
     result = pow(sqrt(2*my_pi*n*p*q), -1) * exp(-pow(x, 2)/2);
 
-    return Py_BuildValue("d", result);
+    return Py_BuildValue("d", round(100*result)/100);
 }
 
 /* expected value */
@@ -222,7 +222,7 @@ static PyObject *py_expected_value(PyObject *self, PyObject *args) {
         double_item2 = PyFloat_AsDouble(item2);
         result += double_item1 * double_item2;
     }
-    return Py_BuildValue("d", result);
+    return Py_BuildValue("d", round(100*result)/100);
 }
 
 /* variance */
@@ -248,7 +248,7 @@ static PyObject *py_variance(PyObject *self, PyObject *args) {
         result1 += double_item1 * double_item2;
         result2 += pow(double_item1,2) * double_item2;
     }
-    return Py_BuildValue("d", result2 - pow(result1,2));
+    return Py_BuildValue("d", round(100*(result2 - pow(result1,2)))/100);
 }
 
 /* standard deviation */
@@ -274,7 +274,7 @@ static PyObject *py_standard_deviation(PyObject *self, PyObject *args) {
         result1 += double_item1 * double_item2;
         result2 += pow(double_item1,2) * double_item2;
     }
-    return Py_BuildValue("d", pow(result2 - pow(result1,2), 0.5));
+    return Py_BuildValue("d", round(100*(pow(result2 - pow(result1,2), 0.5)))/100);
 }
 
 
@@ -287,7 +287,7 @@ static PyMethodDef ownmod_methods[] = {
                 "probability",  // python name
                 py_probability, // C name
                 METH_VARARGS,
-                "Takes 2 arguments: A - number of correct events , B - total number of events. Returns P(A)."
+                "Takes 2 arguments: A - number of correct events, B - total number of events. Returns P(A)."
         },
 
         /* geometric probability */
@@ -392,7 +392,7 @@ static PyMethodDef ownmod_methods[] = {
 static PyModuleDef simple_module = {
         PyModuleDef_HEAD_INIT,
         "probstat", // probstat.__name__
-        "probstat - the main helper for students in probability & statistics.\nprobstat methods allow users to deal with complicated tasks and calculations in statistics and probability theory.", // probstat.__doc__
+        "Probstat - the main helper for students in probability & statistics.\nProbstat methods allow users to deal with complicated tasks and calculations in statistics and probability theory.", // probstat.__doc__
         -1,
         ownmod_methods
 };
